@@ -45,35 +45,48 @@
   </head>
   <body>
 
-    <h1>Text to Music Writer</h1>
+    <div id="myContainer"></div>
+    <!-- <h1 style="text-align: center">Text to Music Writer</h1> -->
 
- <!--    <p>This page demonstrates generating a Context-Free Grammar from a source text.  Drag and drop any files to load.  Selecting "generate grammar" will sort all the words from the source text by syllable and load them into a haiku grammar.  You can then either download the grammar as a JSON file or generate new haikus right on this page.</p> -->
+    <div style="text-align: center">
+      <button id="submit1" >Play Melody!</button>
+  
+    <textarea id = "textinput1" rows="1" cols="180"></textarea>
+    <slider  id="vsliderm"></slider>
+    <br/>
+      </div>
 
-<!--     <p><a href="https://github.com/shiffman/A2Z-F15/issues">File issues</a> and <a href="https://github.com/shiffman/A2Z-F15/tree/gh-pages/week8/04_cfg_generate_grammar/">view source</a> on github</a>.</p> -->
+    <div style="text-align: center">
+      <button id="submit2" >Play Chords!</button>
+   
+    <textarea id = "textinput2" rows="1" cols="180"></textarea>
+    <slider  id="vsliderc"></slider>
+    <br/>
+     </div>
 
-    <p>
-      <a href="" id ="sample">Let It Be</a>
-      <a href="" id ="sample">Susanne </a>
-      <a href="" id ="sample">Let It Be</a>
-      <a href="" id ="sample">Let It Be</a>
-      <a href="" id ="sample">Let It Be</a>
-    </p>
+    <div style="text-align: center">
+      <button id="submit3" >Play Bassss!</button>
+  
+    <textarea id = "textinput3" rows="1" cols="180"></textarea>
+    <slider  id="vsliderb"></slider>
+    <br/>
+    </div>
 
-      <textarea id = "textinput1" rows="1" cols="100">Melody Area</textarea><br/>
-      <textarea id = "textinput2" rows="1" cols="100">Chord Area</textarea><br/>
-      <textarea id = "textinput3" rows="1" cols="100">Base Area</textarea><br/>
-      <button id = "submit1">Play Melody!</button>
-      <button id = "submit2">Play Chords!</button>
-      <button id = "submit3">Play Base!</button>
+    <div style="text-align: center">
       <button id = "submit4">Play All!</button>
+<!--       <button id = "submit5">Stop!</button> -->
+      <button id = "submit6">CLEAR</button>
+    </div>
 
-     <p>
-      <div id="slider">Set the song tempo</div>
-    <p>
+    <div style="text-align: center">
+      <slider id="tslider"></slider>
+    </div>
 
-     <p>
-      <div id="bpm"></div>
-    <p>
+   <div style="text-align: center">
+      <button id = "LIB">Let It Be</button>
+      <button id = "BIW">Blowing In the Wind</button>
+      <button id = "HAL">Halleluja</button>
+  </div>
     
 
   </body>
