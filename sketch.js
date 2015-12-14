@@ -151,7 +151,8 @@ console.log("loaded")
 }
 
 // Many DOM elements
-var dropZone, input, button, sample, clearButton, tslider, vsliderm, vsliderc, vsliderb, sv, bpm, str, chartext, mv, cv, bv, sampleLIB, sampleH, sampleBIW, lmtxt, lctxt, lbtxt;
+var dropZone, input, button, sample, clearButton, tslider, vsliderm, vsliderc, vsliderb, sv, bpm, str, chartext, mv, cv, bv, sampleLIB, sampleH, sampleBIW, samplenLIB, lmtxt, lctxt, lbtxt;
+var markov;
 
 var pianoimg;
 // An array to keep track of all the new DOM elements being added
@@ -206,7 +207,13 @@ function setup() {
   var cnv = createCanvas(1250,400);
   cnv.parent("myContainer");
 
-  pianoimg = loadImage("PianoSketch/Piano1.png");
+  var factor = 4.57;
+  pianoimg = loadImage("PianoSketch/Piano1.png"); 
+
+  // , function(pianoimg) {
+  //   image(pianoimg, 0,0, pianoimg.width/factor, pianoimg.height/factor);
+  // });
+
 
   // Sliders for tempo, melody/chord and base Volume
   tslider = createSlider(100, 200, 150);
@@ -243,10 +250,12 @@ function setup() {
   button6.mousePressed(clearText);
 
   sampleLIB = select('#LIB');
+  samplenLIB = select('#nLIB');
   // SampleBIW = select('#BIW');
   // SampleHAL = select('#HAL');
 
   sampleLIB.mousePressed(loadFileLIB);
+  samplenLIB.mousePressed(generateM);
   // sampleBIW.mousePressed(loadFileBIW);
   // sampleH.mousePressed(loadFileHAL);
 
@@ -279,8 +288,6 @@ function bfileLoaded(data) {
   var lbtxt = data.join('\n');
   textinput3.value(lbtxt);
 }
-
-
 
   //These are the functions called when playing the mel/chords/base/all
   function playMelody() {
@@ -322,6 +329,30 @@ function bfileLoaded(data) {
     handleInput("base", chartext3);
   }
 
+   markov = new MarkovGenerator(1, 100);
+    // Feed all the lines from the text file into the generator
+
+
+    // for (var i = 0; i < str1.length; i++) {
+    //   markov.feed(str1[i]);
+    // }
+
+  function generateM() {
+    var str1 = textinput1.value();
+    console.log(str1);
+    markov.feed(str1);
+
+    var newmark = markov.generate();
+    console.log(newmark);
+    textinput1.value(newmark);
+
+    // Set up a button
+    // samplenLIB = select('#nLIB');
+    // var button = select('#button');
+    // // button.mousePressed(generate);
+    // // samplenLIB.mousePressed(generateM);
+  }
+
   // function stopSong(){
   //   var chartext1 = [];
   //   var chartext2 = [];
@@ -341,14 +372,65 @@ function bfileLoaded(data) {
 function draw() {
   //Tempo slider. 
  sv = tslider.value(); 
+ background(255);
+
+
+ // if(!input1Focused && !input2Focused && !input3Focused) {
+  var factor = 4.57;
+  image(pianoimg, 0, 0, pianoimg.width/factor, pianoimg.height/factor);
+
 
   //Volume sliders
  mv = vsliderm.value()*0.01;
  cv = vsliderc.value()*0.01;
  bv = vsliderb.value()*0.01;
 
- var factor = 4.57;
+function drawMelody() {
+  // console.log(textinput1.value());
+    var str1 = textinput1.value();
+    var melarray = str1.split("");
+    
+    var melkeys = "q2w3er5t6y7ui9o0p[=]azsxcfvgbnjmk,l./"
+    var melobj = {};
+    var strokew = vsliderm.value()*0.05;
 
+    for (var i in melkeys) {
+      melobj[melkeys[i]] = i;
+    }
+
+    for (var i in melarray){
+      strokeWeight(strokew);
+      // var j = i + 1;
+      line(100 + i*8, 270 - melobj[melarray[i]]*3, 105 + i*8, 270 - melobj[melarray[i]]*3);
+      // line(105 + i*5, 250 - melobj[melarray[i]]*3, 110 + i*5, 250 - melobj[melarray[j]]*3);
+      // line(x,y, x,y) 
+    } 
+}
+
+function drawBase() {
+  var str3 = textinput3.value();
+  var basarray = str3.split("");
+
+  var baskeys = "q2w3er5t6y7ui9o0p[=]azsxcfvgbnjmk,l./"
+  var basobj = {};
+  var height = vsliderb.value()/15;
+
+  for (var i in baskeys) {
+    basobj[baskeys[i]] = i;
+  }
+
+  for (var i in basarray){
+    
+    fill(0);
+    // var j = i + 1;
+    ellipse(100 + i*8, 350 - basobj[basarray[i]], 10, height);
+    // line(105 + i*5, 250 - melobj[melarray[i]]*3, 110 + i*5, 250 - melobj[melarray[j]]*3);
+    // line(x,y, x,y) 
+  } 
+}
+
+drawBase();
+drawMelody();
 
 // if(mouseY < 400){ 
 //  factor = mouseY/(400/4.57);
@@ -364,7 +446,8 @@ function draw() {
  //  factor = factor + 0.5;
  //  }
 
- image(pianoimg, 0, 0, pianoimg.width/factor, pianoimg.height/factor);
+
+
 
  var wkarray = whitekeys.split("");
  var bkarray = blackkeys.split("");
@@ -375,7 +458,51 @@ function draw() {
  var bkbstart = bkmstart - 497;
 
 
+//   for (var i = 0; i < 500; i++) {
+//     setTimeout(makeElement, i*100);
+//   }
+// }
+
+
+
+//   for (var i = 0; i < chartext.length; i++) {
+//     var keychar = "";
+//     var keychar = chartext[i];
+//     playIt(keychar, startTime, area);
+//     startTime = startTime + sv;
+//   }
+// }
+
+// function playIt(key, index, area) { 
+//   setTimeout(delayPlayIt, index);
+  
+//   function delayPlayIt() {
+
+
+
+
+var startTimes = 0;
+
  if(input1Focused){
+   
+
+
+   // for (var j = 0; j < wkarray.length; j++) {
+   //    var typed = wkarray[j];
+   //    write(typed, startTimes);
+   //    startTimes = startTimes + sv;
+   //  }
+
+   //  function write(typed, index) {
+   //    setTimeout(delayWrite, index);
+   //    function delayWrite() {
+   //    textSize(12);
+   //    fill(0);
+   //    text(typed, 50 + wkmstart, 135); 
+   //    wkmstart += 24;
+   //    }
+   //  }
+
    for (var j = 0; j < wkarray.length; j++) {
     textSize(12);
     fill(0);
@@ -406,6 +533,7 @@ function draw() {
     bkbstart += 23.8;
    }
  }
+
 }
 
 
@@ -1432,8 +1560,8 @@ function keyTyped() {
         b2.play();
         ds2.setVolume(chordvolume);
         ds2.play();
-        f2.setVolume(chordvolume);
-        f2.play();
+        fs2.setVolume(chordvolume);
+        fs2.play();
       }  if(input3Focused){
         b0.setVolume(basevolume);
         b0.play();
